@@ -52,8 +52,12 @@ public class TcpClient implements Closeable {
 		this(hostName, port, DEFAULT_INTERVAL, DEFAULT_NUMBER_ATTEMPTS);
 	}
 	@Override
-	public void close() throws IOException {
-		socket.close();
+	public void close() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		
 	}
 	public String sendAndReceive(Request request) {
