@@ -3,11 +3,11 @@ package telran.net;
 import java.net.*;
 import java.io.*;
 
-public class TcpClientServerSession {
+public class TcpClientServerSession implements Runnable {
 	Socket socket;
 	Protocol protocol;
 
-	public TcpClientServerSession(Socket socket, Protocol protocol) {
+	public TcpClientServerSession (Socket socket, Protocol protocol) {
 		this.socket = socket;
 		this.protocol = protocol;
 	}
