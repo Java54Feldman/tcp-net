@@ -15,8 +15,7 @@ public class TcpServer {
 			while(true) {
 				Socket socket = serverSocket.accept();
 				TcpClientServerSession session = new TcpClientServerSession(socket, protocol);
-				Thread thread = new Thread(session);
-				thread.start();
+				session.start();
 			}
 		} catch(Exception e) {
 			throw new RuntimeException(e);

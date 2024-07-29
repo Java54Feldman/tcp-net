@@ -3,7 +3,7 @@ package telran.net;
 import java.net.*;
 import java.io.*;
 
-public class TcpClientServerSession implements Runnable {
+public class TcpClientServerSession extends Thread {
 	Socket socket;
 	Protocol protocol;
 
