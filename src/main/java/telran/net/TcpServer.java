@@ -7,7 +7,7 @@ public class TcpServer implements Runnable {
 	Protocol protocol;
 	int port;
 	boolean running = true;
-	private static final int ACCEPT_TIMEOUT = 1000; 
+	private static final int ACCEPT_TIMEOUT = 100; 
     private List<TcpClientServerSession> activeSessions = new ArrayList<>();
     
 	public TcpServer(Protocol protocol, int port) {
@@ -24,7 +24,7 @@ public class TcpServer implements Runnable {
 					Socket socket = serverSocket.accept();
 					TcpClientServerSession session = new TcpClientServerSession(socket, protocol);
 					activeSessions.add(session);
-					session.run();
+					session.start();
 				} catch (SocketTimeoutException e) {
 
 				}
