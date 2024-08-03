@@ -14,7 +14,7 @@ public class TcpServer implements Runnable{
 	}
 	public void run() {
 		try(ServerSocket serverSocket = new ServerSocket(port)){
-			//TODO using ServerSocket method setSoTimeout 
+			//using ServerSocket method setSoTimeout 
 			System.out.println("Server is listening on port " + port);
 			serverSocket.setSoTimeout(SOCKET_TIMEOUT);
 			while(running) {
