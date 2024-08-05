@@ -9,25 +9,29 @@ public class TcpServer implements Runnable{
 	Protocol protocol;
 	int port;
 	boolean running = true;
-	ExecutorService sessionExecutor;
+	ExecutorService executor;
 	public TcpServer(Protocol protocol, int port) {
 		this.protocol = protocol;
 		this.port = port;
-		this.sessionExecutor = Executors.newFixedThreadPool(getNumberOfThreads());
+		executor = Executors.newFixedThreadPool(getNumberOfThreads());
 	}
-
+	private int getNumberOfThreads() {
+		
+		return Runtime.getRuntime().availableProcessors();
+	}
 	public void shutdown() {
 		running = false;
-		sessionExecutor.shutdown();
+		executor.shutdownNow();
 		try {
-			sessionExecutor.awaitTermination(SESSION_IDLE_TIMEOUT, TimeUnit.MILLISECONDS);
+			executor.awaitTermination(MAX_WAITING_TIME_IN_SECONDS, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			// no interrupts
+			//No interruptions
 		}
 	}
 	public void run() {
 		try(ServerSocket serverSocket = new ServerSocket(port)){
-			//using ServerSocket method setSoTimeout 
+			// using ServerSocket method setSoTimeout for unblocking "accept" 
+			//otherwise there is case of forever waiting on "accept" method
 			System.out.println("Server is listening on port " + port);
 			serverSocket.setSoTimeout(SOCKET_TIMEOUT);
 			while(running) {
@@ -36,9 +40,7 @@ public class TcpServer implements Runnable{
 
 					TcpClientServerSession session =
 							new TcpClientServerSession(socket, protocol, this);
-					session.start();
-					sessionExecutor.execute(session);
-					
+					executor.execute(session);
 				} catch (SocketTimeoutException e) {
 					
 				}
@@ -50,10 +52,6 @@ public class TcpServer implements Runnable{
 		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
-	}
-	private int getNumberOfThreads() {
-		Runtime runtime = Runtime.getRuntime();
-		return runtime.availableProcessors();
 	}
 	
 }
