@@ -65,7 +65,7 @@ public class TcpClient implements Closeable{
 			sender.println(request);
 			String responseJSON = receiver.readLine();
 			if (responseJSON == null) {
-				throw new IOException("Server closed connection");
+				throw new RuntimeException("Server closed connection");
 			}
 			JSONObject jsonObj = new JSONObject(responseJSON);
 			ResponseCode responseCode = jsonObj.getEnum(ResponseCode.class,

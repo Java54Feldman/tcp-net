@@ -20,13 +20,14 @@ public class TcpServer implements Runnable{
 		return Runtime.getRuntime().availableProcessors();
 	}
 	public void shutdown() {
-		running = false;
 		executor.shutdownNow();
+		running = false;
 		try {
 			executor.awaitTermination(MAX_WAITING_TIME_IN_SECONDS, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			//No interruptions
 		}
+		
 	}
 	public void run() {
 		try(ServerSocket serverSocket = new ServerSocket(port)){
