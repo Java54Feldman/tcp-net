@@ -62,9 +62,13 @@ public class TcpClient implements Closeable{
 	}
 	public String sendAndReceive(Request request) {
 		try {
+			if(socket == null) {
+				connect();
+			}
 			sender.println(request);
 			String responseJSON = receiver.readLine();
 			if (responseJSON == null) {
+				terminateSocket();
 				throw new RuntimeException("Server closed connection");
 			}
 			JSONObject jsonObj = new JSONObject(responseJSON);
@@ -80,6 +84,14 @@ public class TcpClient implements Closeable{
 			connect();
 			throw new RuntimeException("Server is unavailable, repeat later on");
 		}
+	}
+	private void terminateSocket() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		socket = null;
 	}
 	
 	
